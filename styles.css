@@ -1,0 +1,86 @@
+h2 {
+  font-size: 24px;
+}
+
+.map-title {
+  text-align: center;
+  min-height: 10vh;
+  vertical-align: bottom;
+  margin: 0;
+}
+
+legend {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.scrolly-overlay .scrolly {
+  margin: 3rem auto;
+  padding: 1rem;
+  position: relative;
+}
+
+.scrolly-overlay .scrolly article {
+  padding: 0;
+  width: 33%;
+  margin: 0 0 0 auto;
+  position: relative;
+}
+
+.scrolly-overlay .scrolly article .step {
+  min-height: 75vh;
+  margin-bottom: 1rem;
+}
+
+.scrolly-overlay .scrolly article .step:last-of-type {
+  min-height: 66vh;
+}
+
+.scrolly-overlay .scrolly article .step p {
+  margin-bottom: 3rem;
+  padding: 1rem;
+  font-size: 16px;
+}
+
+.scrolly-overlay .scrolly figure.sticky {
+  /* this is the key style for the chart */
+  position: sticky;
+  width: 66%;
+  height: auto;
+  /* vh is the unit that divdes the viewport in units of 1/100 */
+  /* height is 50 vh = half the height of the viewport */
+  margin: 0;
+  top: 0;
+  /* this is how high it should be from top */
+
+  left: 0;
+}
+
+@media only screen and (max-width: 600px) {
+  .scrolly-overlay .scrolly article .step p {
+    margin-bottom: 3rem;
+    padding: 0.5rem;
+    font-size: 18px;
+  }
+
+  .scrolly-overlay .scrolly article {
+    padding: 0;
+    width: 100%;
+    margin: 0 0 0 auto;
+  }
+
+  .scrolly-overlay .scrolly figure.sticky {
+    /* this is the key style for the chart */
+    position: sticky;
+    width: 100%;
+    height: auto;
+    /* vh is the unit that divdes the viewport in units of 1/100 */
+    /* height is 50 vh = half the height of the viewport */
+    margin: 0;
+    top: 10vh;
+    /* this is how high it should be from top */
+    background-color: white;
+    left: 0;
+  }
+}
