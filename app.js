@@ -7,7 +7,7 @@ Promise.all([d3.json("congressional_districts3.json")])
 function ready(res) {
   let raw = res[0];
   let mapWidth = 600;
-  let mapHeight = 400;
+  let mapHeight = 550;
 
   console.log(raw);
   let states = topojson.feature(raw, raw.objects.states);
@@ -15,8 +15,6 @@ function ready(res) {
     "00s": topojson.feature(raw, raw.objects.districts_00s),
     "10s": topojson.feature(raw, raw.objects.districts_10s),
   };
-
-  console.log(districts);
 
   let mapSvg = d3.select("body").select("#congressionalMap");
   mapSvg.attr("viewBox", `0 0 ${mapWidth} ${mapHeight}`);
@@ -28,12 +26,45 @@ function ready(res) {
 
   let path = d3.geoPath().projection(projection);
 
-  let colors = ["#f2f0f7", "#cbc9e2", "#9e9ac8", "#6a51a3"];
-  let breaks = [0, 0.25, 0.5, 0.75];
+  let colors = ["#eff3ff", "#bdd7e7", "#6baed6", "#3182bd", "#08519c"];
+  let breaks = [0.2, 0.4, 0.6, 0.8];
 
   let color = d3.scaleThreshold().domain(breaks).range(colors);
 
   let getColor = (d) => color(d.properties.score);
+
+  let mapLegend = mapSvg
+    .append("text")
+    .attr("y", 40)
+    .attr("x", 10)
+    .style("font-size", "18px")
+    .text("Congressional Districts in the 2000's");
+
+  let rectHeight = 20;
+  let rectWidth = 60;
+  for (let i = 0; i < 5; i++) {
+    mapSvg
+      .append("rect")
+      .attr("x", 10 + i * rectWidth)
+      .attr("y", mapHeight - rectHeight - 12)
+      .attr("width", rectWidth)
+      .attr("height", rectHeight)
+      .style("fill", colors[i]);
+  }
+
+  mapSvg
+    .append("text")
+    .attr("x", 0)
+    .attr("y", mapHeight - rectHeight - 18)
+    .style("font-size", "14px")
+    .text("More Moderate");
+
+  mapSvg
+    .append("text")
+    .attr("x", 4 * rectWidth + rectWidth / 2)
+    .attr("y", mapHeight - rectHeight - 18)
+    .style("font-size", "14px")
+    .text("More Extreme");
 
   mapSvg
     .append("g")
@@ -57,34 +88,90 @@ function ready(res) {
       .attr(
         "class",
         (d) =>
-          `district congressionalDistrict-${key} ${d.properties.state_name}`
+          `district congressionalDistrict-${key} ${d.properties.state_abbrev}`
       )
+      .attr("data-decade", key)
       .style("fill", getColor)
       .style("stroke", "#333")
       .style("stroke-width", "0.5")
-      .style("opacity", "0");
+      .style("display", "none");
   }
 
   const container = d3.select(".scrolly-overlay");
   const stepSel = container.selectAll(".step"); //final all the step nodes
-  const decadeLegend = d3.select("#decade");
 
   const repStates = ["Florida", "North Carolina", "Ohio", "Wisconsin"];
   const splitStates = ["Iowa", "Maine", "New Jersey", "Oregon"];
   const courtStates = ["Colorado", "Minnesota", "Nevada", "New Mexico"];
-  const legendKey = {
-    "00s": "2003-2012",
-    "10s": "2013-2022",
-  };
+  const legendKey = [
+    "Congressional Districts in the 2000's",
+    "Congressional Districts in the 2010's",
+    "Republican Drawn Districts in Swing States",
+    "Split Party Drawn Districts in Swing States",
+    "Court Drawn Districts in Swing States",
+  ];
 
-  d3.selectAll(".congressionalDistrict-00s").style("opacity", "1");
+  d3.selectAll(".congressionalDistrict-00s").style("display", "block");
+
+  let popup = mapSvg
+    .append("g")
+    .attr("class", "mouse-over-popup")
+    .style("display", "none");
+
+  popup
+    .append("rect")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("width", 120)
+    .attr("height", 40)
+    .style("fill", "white");
+
+  popup
+    .append("text")
+    .attr("class", "district-name")
+    .attr("x", 5)
+    .attr("y", 15)
+    .style("font-size", 12);
+  popup
+    .append("text")
+    .attr("class", "district-score")
+    .attr("x", 5)
+    .attr("y", 30)
+    .style("font-size", 12);
+
+  d3.selectAll(".district")
+    .on("mouseover", (event, d) => {
+      popup
+        .attr(
+          "transform",
+          `translate(${path.centroid(d)[0] - 60},${path.centroid(d)[1] + 10})`
+        )
+        .style("display", "block");
+
+      popup
+        .select(".district-name")
+        .text(
+          `District: ${d.properties.state_abbrev}-${d.properties.district_code}`
+        );
+
+      popup
+        .select(".district-score")
+        .text(`Absolute Score: ${d.properties.score.toFixed(3)}`);
+    })
+    .on("mouseout", (event, d) => {
+      popup.style("display", "none");
+    });
 
   function updateChart(index) {
     const sel = container.select(`[data-index='${index}']`);
     const decade = sel.attr("data-decade");
-    decadeLegend.html(legendKey[decade]);
-    d3.selectAll(".district").style("opacity", "0");
-    d3.selectAll(`.congressionalDistrict-${decade}`).style("opacity", "1");
+
+    mapLegend.text(legendKey[index]);
+
+    d3.selectAll(".district").style("display", "none");
+    d3.selectAll(`.congressionalDistrict-${decade}`)
+      .style("display", "block")
+      .style("opacity", 1);
     d3.selectAll(".state").style("stroke", "#333").style("stroke-width", "0.5");
 
     if (index == 2) {
@@ -125,7 +212,7 @@ function ready(res) {
     enterView({
       //our main view function
       selector: stepSel.nodes(),
-      offset: 0.5, //when the slide is 50% away then trigger your chart
+      offset: 0.2, //when the slide is 50% away then trigger your chart
       enter: (el) => {
         //what's supposed to happen when the slide enters?
         let index = +d3.select(el).attr("data-index"); //extract the data-index attribute. this can be anything: a filter, a date, whatever.

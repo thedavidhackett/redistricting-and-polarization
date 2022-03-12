@@ -1,86 +1,145 @@
+@import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400;1,700&family=Source+Sans+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+h1 {
+  font-size: 36px;
+  text-align: center;
+  font-family: "Lora", serif;
+}
+
 h2 {
-  font-size: 24px;
+  font-size: 27px;
+  margin-bottom: 0.5rem;
+  font-family: "Lora", serif;
+}
+
+p,
+legend {
+  line-height: 1.4;
+}
+
+body {
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 18px;
+}
+
+.chart {
+  width: 100%;
+  height: auto;
+  margin: 1rem 0;
+}
+
+.pop-up {
+  position: absolute;
+  border: 1px solid black;
+  border-radius: 1px;
+  line-height: 1.2;
+  width: 200px;
+  pointer-events: none;
+  background-color: white;
+  padding: 10px;
+}
+
+section {
+  max-width: 600px;
+  margin: 0 auto 3rem auto;
+}
+.chart-container {
+  margin-bottom: 3rem;
+}
+
+.mobile {
+  display: none;
+}
+
+.desktop {
+  display: block;
+}
+
+.notes {
+  font-size: 12px;
+  color: gray;
+}
+
+.container {
+  padding: 1rem;
+  max-width: 750px;
+  margin: 0 auto;
 }
 
 .map-title {
-  text-align: center;
-  min-height: 10vh;
-  vertical-align: bottom;
-  margin: 0;
+  min-height: 2rem;
+  margin: 0.5rem;
 }
 
 legend {
-  font-size: 24px;
-  font-weight: bold;
-  text-align: center;
+  margin-bottom: 1rem;
 }
 
 .scrolly-overlay .scrolly {
   margin: 3rem auto;
-  padding: 1rem;
   position: relative;
 }
 
 .scrolly-overlay .scrolly article {
   padding: 0;
-  width: 33%;
   margin: 0 0 0 auto;
+}
+
+.scrolly-overlay .scrolly .step {
+  width: 100%;
   position: relative;
+  margin-bottom: 90vh;
+  transform: translate3d(0, 0, 100px);
+  z-index: 10;
 }
 
-.scrolly-overlay .scrolly article .step {
-  min-height: 75vh;
-  margin-bottom: 1rem;
+.scrolly-overlay .scrolly .step:last-of-type {
+  min-height: 120vh;
+  margin-bottom: 2rem;
 }
 
-.scrolly-overlay .scrolly article .step:last-of-type {
-  min-height: 66vh;
-}
-
-.scrolly-overlay .scrolly article .step p {
-  margin-bottom: 3rem;
-  padding: 1rem;
+.scrolly-overlay .scrolly .step p {
+  width: 33%;
   font-size: 16px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.75);
+  padding: 0.5rem;
+  margin: 0;
 }
 
 .scrolly-overlay .scrolly figure.sticky {
   /* this is the key style for the chart */
   position: sticky;
-  width: 66%;
+  width: 100%;
   height: auto;
   /* vh is the unit that divdes the viewport in units of 1/100 */
   /* height is 50 vh = half the height of the viewport */
   margin: 0;
   top: 0;
   /* this is how high it should be from top */
-
   left: 0;
 }
 
 @media only screen and (max-width: 600px) {
-  .scrolly-overlay .scrolly article .step p {
-    margin-bottom: 3rem;
-    padding: 0.5rem;
-    font-size: 18px;
+  h1 {
+    font-size: 30px;
   }
 
-  .scrolly-overlay .scrolly article {
-    padding: 0;
-    width: 100%;
-    margin: 0 0 0 auto;
+  h2 {
+    font-size: 23px;
   }
 
-  .scrolly-overlay .scrolly figure.sticky {
-    /* this is the key style for the chart */
-    position: sticky;
-    width: 100%;
-    height: auto;
-    /* vh is the unit that divdes the viewport in units of 1/100 */
-    /* height is 50 vh = half the height of the viewport */
-    margin: 0;
-    top: 10vh;
-    /* this is how high it should be from top */
-    background-color: white;
-    left: 0;
+  body {
+    font-size: 16px;
+  }
+  .scrolly-overlay .scrolly .step p {
+    width: 85%;
+  }
+
+  .mobile {
+    display: block;
+  }
+
+  .desktop {
+    display: none;
   }
 }
